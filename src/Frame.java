@@ -3,7 +3,7 @@ import javax.swing.*;
 public class Frame extends JFrame {
     public Frame(){
         System.setProperty("sun.java2d.opengl", "true");
-        this.setTitle("Gravity Field");
+        this.setTitle("Chaos Game Simulator");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(new Panel());
 

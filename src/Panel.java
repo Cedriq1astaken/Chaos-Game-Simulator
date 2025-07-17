@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Panel extends JPanel implements ActionListener, MouseWheelListener, MouseMotionListener {
     private final int WIDTH = 900;
     private final int HEIGHT = 900;
-    private final ChaosGameSettings SETTINGS = new ChaosGameSettings(3, 1, 2.0/3, 350, WIDTH, HEIGHT);
+    private final ChaosGameSettings SETTINGS = new ChaosGameSettings(3, 0, 1.0/2, 350, WIDTH, HEIGHT);
     private final ChaosGameSimulator SIM = new ChaosGameSimulator(SETTINGS);
 
     private Timer timer;
