@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 
 public class ChaosGameSettings {
     private int nVertexAnchor;
@@ -7,13 +8,18 @@ public class ChaosGameSettings {
     private double centroidToVertex;
     private Point2D.Double initialPoint;
 
+    //Conditions;
+    private HashMap<String, Integer>[] skipsConditions;
+
     public ChaosGameSettings(int nVertexAnchor, int nEdgeAnchor, double distanceRatio,
-                             double centroidToVertex, double width, double height) {
+                             double centroidToVertex, double width, double height,
+                             HashMap<String, Integer>[] skipsConditions) {
         this.nVertexAnchor = nVertexAnchor;
         this.nEdgeAnchor = nEdgeAnchor;
         this.distanceRatio = distanceRatio;
         this.centroidToVertex = centroidToVertex;
         this.initialPoint = new Point2D.Double(width/2, height/2);
+        this.skipsConditions = skipsConditions;
     }
 
     public int getnVertexAnchor() {
@@ -34,5 +40,10 @@ public class ChaosGameSettings {
 
     public int getnEdgeAnchor() {
         return nEdgeAnchor;
+    }
+
+
+    public HashMap<String, Integer>[] getSkipsConditions() {
+        return skipsConditions;
     }
 }

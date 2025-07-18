@@ -4,14 +4,16 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Panel extends JPanel implements ActionListener, MouseWheelListener, MouseMotionListener {
     private final int WIDTH = 900;
     private final int HEIGHT = 900;
-    private final ChaosGameSettings SETTINGS = new ChaosGameSettings(3, 0, 1.0/2, 350, WIDTH, HEIGHT);
-    private final ChaosGameSimulator SIM = new ChaosGameSimulator(SETTINGS);
+    private final SidePanel sidePanel = new SidePanel(WIDTH/3, HEIGHT);
 
     private Timer timer;
+    private ChaosGameSettings SETTINGS;
+    private ChaosGameSimulator SIM;
     private double zoomFactor;
     private Point2D zoomCenter;
 
@@ -21,6 +23,11 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         this.setFocusable(true);
         this.addMouseWheelListener(this);
         this.addMouseMotionListener(this);
+//        this.add(sidePanel);
+
+        this.SETTINGS = new ChaosGameSettings(4, 0, 0.6, 350, WIDTH, HEIGHT,
+                                                new HashMap[]{});
+        this.SIM = new ChaosGameSimulator(SETTINGS);
 
         this.timer = new Timer(16, this);
         this.zoomFactor = 1.0;
@@ -53,11 +60,6 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        SIM.nextPoint();
-        repaint();
-    }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -88,6 +90,12 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        SIM.nextPoint();
+        repaint();
     }
 
 }

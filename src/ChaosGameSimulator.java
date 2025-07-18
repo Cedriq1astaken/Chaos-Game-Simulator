@@ -1,6 +1,8 @@
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
+
 
 public class ChaosGameSimulator {
     private ArrayList<Point2D> points;
@@ -8,6 +10,7 @@ public class ChaosGameSimulator {
     private ChaosGameSettings settings;
     private Point2D target;
     private Random rand = new Random();
+    private HashMap<String, Integer> choice = Helper.hashMapBuilder(-1, 0);
 
 
     public ChaosGameSimulator(ChaosGameSettings settings){
@@ -55,19 +58,44 @@ public class ChaosGameSimulator {
 
     public void nextPoint(){
         double distanceRatio = settings.getDistanceRatio();
-        int choice = rand.nextInt(anchorPoints.size());
+        int n = conditionsCheck();
+        if(choice.get("proximity") == n){
+            choice.put("occurrence", choice.get("occurrence") + 1);
+        }
+        else{
+            choice.put("proximity", n);
+            choice.put("occurrence", 1);
+        }
 
-        target = linearInterpolation(target, anchorPoints.get(choice), distanceRatio);
+        target = linearInterpolation(target, anchorPoints.get(choice.get("proximity")), distanceRatio);
         points.add(target);
     }
 
     public Point2D linearInterpolation(Point2D p1, Point2D p2, double t){
-        Point2D p = new Point2D.Double(
+        return new Point2D.Double(
                 p1.getX() * (1 - t) + p2.getX() * t,
                 p1.getY() * (1 - t) + p2.getY() * t
         );
-        return p;
     }
 
+    public int conditionsCheck(){
+        HashMap<String, Integer>[] conditions = settings.getSkipsConditions();
+        int newChoice;
+        boolean isTrue = true;
 
+        do {
+            isTrue = true;
+            newChoice = rand.nextInt(anchorPoints.size());
+
+            for (HashMap<String, Integer> condition : conditions) {
+                int proximity = choice.get("proximity");
+                if (Helper.mod(proximity + condition.get("proximity"), anchorPoints.size()) == newChoice) {
+                    isTrue = false;
+                    break;
+                }
+            }
+        }while (!isTrue);
+
+        return newChoice;
+    }
 }
