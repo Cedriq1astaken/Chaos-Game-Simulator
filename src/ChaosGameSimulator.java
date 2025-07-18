@@ -1,7 +1,5 @@
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 
 public class ChaosGameSimulator {
@@ -10,7 +8,7 @@ public class ChaosGameSimulator {
     private ChaosGameSettings settings;
     private Point2D target;
     private Random rand = new Random();
-    private HashMap<String, Integer> choice = Helper.hashMapBuilder(-1, 0);
+    private Deque<Integer> lastChoices = new ArrayDeque<>();
 
 
     public ChaosGameSimulator(ChaosGameSettings settings){
@@ -59,15 +57,15 @@ public class ChaosGameSimulator {
     public void nextPoint(){
         double distanceRatio = settings.getDistanceRatio();
         int n = conditionsCheck();
-        if(choice.get("proximity") == n){
-            choice.put("occurrence", choice.get("occurrence") + 1);
-        }
+
+        if(lastChoices.isEmpty() || lastChoices.getLast() == n)
+            lastChoices.add(n);
         else{
-            choice.put("proximity", n);
-            choice.put("occurrence", 1);
+            lastChoices.clear();
+            lastChoices.add(n);
         }
 
-        target = linearInterpolation(target, anchorPoints.get(choice.get("proximity")), distanceRatio);
+        target = linearInterpolation(target, anchorPoints.get(n), distanceRatio);
         points.add(target);
     }
 
@@ -81,21 +79,28 @@ public class ChaosGameSimulator {
     public int conditionsCheck(){
         HashMap<String, Integer>[] conditions = settings.getSkipsConditions();
         int newChoice;
-        boolean isTrue = true;
+        boolean isValid;
 
         do {
-            isTrue = true;
+            isValid = true;
             newChoice = rand.nextInt(anchorPoints.size());
 
             for (HashMap<String, Integer> condition : conditions) {
-                
-                int proximity = choice.get("proximity");
-                if (Helper.mod(proximity + condition.get("proximity"), anchorPoints.size()) == newChoice) {
-                    isTrue = false;
-                    break;
+                int requiredOccurrence = condition.get("occurrence");
+                int proximity = condition.get("proximity");
+
+                // Check if current streak matches required condition
+                if (lastChoices.size() >= requiredOccurrence) {
+                    int lastChosen = lastChoices.getLast();
+                    int blocked = Helper.mod(lastChosen + proximity, anchorPoints.size());
+
+                    if (newChoice == blocked) {
+                        isValid = false;
+                        break;
+                    }
                 }
             }
-        }while (!isTrue);
+        } while (!isValid);
 
         return newChoice;
     }

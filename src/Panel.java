@@ -25,8 +25,11 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         this.addMouseMotionListener(this);
 //        this.add(sidePanel);
 
-        this.SETTINGS = new ChaosGameSettings(4, 0, 0.6, 350, WIDTH, HEIGHT,
-                                                new HashMap[]{});
+        this.SETTINGS = new ChaosGameSettings(4, 0, 0.5, 350, WIDTH, HEIGHT,
+                                                new HashMap[]{
+                                                        Helper.hashMapBuilder(1, 2),
+                                                        Helper.hashMapBuilder(-1, 2)
+                                                });
         this.SIM = new ChaosGameSimulator(SETTINGS);
 
         this.timer = new Timer(16, this);
