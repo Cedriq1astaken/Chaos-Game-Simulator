@@ -88,6 +88,7 @@ public class ChaosGameSimulator {
             newChoice = rand.nextInt(anchorPoints.size());
 
             for (HashMap<String, Integer> condition : conditions) {
+                
                 int proximity = choice.get("proximity");
                 if (Helper.mod(proximity + condition.get("proximity"), anchorPoints.size()) == newChoice) {
                     isTrue = false;
