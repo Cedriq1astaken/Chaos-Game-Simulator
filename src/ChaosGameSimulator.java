@@ -9,6 +9,7 @@ public class ChaosGameSimulator {
     private Point2D target;
     private Random rand = new Random();
     private Deque<Integer> lastChoices = new ArrayDeque<>();
+    private boolean removed = false;
 
 
     public ChaosGameSimulator(ChaosGameSettings settings){
@@ -66,6 +67,13 @@ public class ChaosGameSimulator {
         }
 
         target = linearInterpolation(target, anchorPoints.get(n), distanceRatio);
+
+        if (points.size() > anchorPoints.size() + 6 && removed){
+            for(int i = 0; i < 6; i++){
+                points.removeLast();
+            }
+            removed = true;
+        }
         points.add(target);
     }
 

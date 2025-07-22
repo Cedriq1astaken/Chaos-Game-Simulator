@@ -1,18 +1,33 @@
-import Custom.CollapseBtn;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class SidePanel extends JPanel {
-    private final JButton collapse = new CollapseBtn(10, 10);
+    private boolean expanded = true;
+    private final JButton toggleButton = new JButton("<<");
 
-    public SidePanel(int WIDTH, int HEIGHT){
-        this.setBounds(0, 0, WIDTH, HEIGHT);
-        this.setBackground(new Color(190, 190, 190, 50));
-        this.setLayout(null);
-        this.setFocusable(true);
+    public SidePanel() {
+        setPreferredSize(new Dimension(200, 0));
+        setOpaque(true);
+        setBackground(new Color(100, 100, 100, 100)); // semi-transparent black
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        this.add(collapse);
+        toggleButton.setFocusable(false);
+        toggleButton.addActionListener(e -> toggle());
     }
 
+    public void toggle() {
+        expanded = !expanded;
+        setVisible(expanded);
+        toggleButton.setText(expanded ? "<<" : ">>");
+        toggleButton.setBackground(new Color(0, 0, 0, 0));
+    }
+
+    public JButton getToggleButton() {
+        return toggleButton;
+    }
+
+    public void setText(){
+
+    }
 }
