@@ -19,6 +19,7 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
     private Point2D zoomCenter;
     private boolean isPaused = false;
     private double dimension = 0.0;
+    GlidingBoxLacunarity calculator = new GlidingBoxLacunarity(2, 4);
 
     //Labels
     private JLabel countLabel;
@@ -95,7 +96,16 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         dimensionBtn.setText("dimension");
         dimensionBtn.setFocusable(false);
         dimensionBtn.addActionListener(e ->{
-            System.out.println(Arrays.deepToString(Helper.boxCounting2D(SIM.getPoints(), 9)));
+            Point2D[] data = SIM.getPoints().toArray(new Point2D[0]);
+            int[] boxSizes = {1, 2, 3, 4, 5, 6};
+            double[] lacunarityValues = calculator.calculateLacunarity(Helper.point2dToDouble(data), boxSizes);
+
+            // Output results
+            System.out.println("Gliding Box Lacunarity Results:");
+            System.out.println("Box Size\tLacunarity");
+            for (int i = 0; i < boxSizes.length; i++) {
+                System.out.printf("%d\t\t%.6f%n", boxSizes[i], lacunarityValues[i]);
+            };
         });
 
         add = new JButton();
@@ -107,7 +117,6 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
             isPaused = true;
             for(int i = 0; i < 1_000; i++){
                 SIM.nextPoint();
-
             }
         });
 

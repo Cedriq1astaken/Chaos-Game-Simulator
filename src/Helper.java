@@ -103,4 +103,15 @@ public class Helper {
         return logLog;
     }
 
+    public static double[][] point2dToDouble(Point2D[] data){
+        ArrayList<double[]> points = new ArrayList<>();
+
+        for(Point2D datum: data){
+            points.add(new double[]{
+                    datum.getX(),
+                    datum.getY()
+            });
+        }
+        return points.toArray(new double[0][0]);
+    }
 }
