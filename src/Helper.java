@@ -114,4 +114,69 @@ public class Helper {
         }
         return points.toArray(new double[0][0]);
     }
+
+    public static int[][] toMatrix(ArrayList<Point2D> data, int gridSize){
+        Point2D[] points = normalize(new double[]{0.0, gridSize - epsilon}, data);
+        int[][] matrix = new int[gridSize][gridSize];
+
+        for(Point2D point: points){
+            int col = (int) point.getX();
+            int row = (int) point.getY();
+            matrix[row][col] = 1;
+        }
+        return matrix;
+    }
+
+    public static int bfs_fill(int[][] grid, int start_x, int start_y, boolean[][] visited) {
+        int size = grid.length;
+        int count = 1;
+
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{start_x, start_y});
+
+        visited[start_y][start_x] = true;
+
+        int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        while(!queue.isEmpty()) {
+
+
+            int[] current = queue.removeFirst();
+
+            int x = current[0];
+            int y = current[1];
+
+            for (int i = 0; i < dx.length; i++) {
+                int new_x = x + dx[i];
+                int new_y = y + dy[i];
+                if (new_x >= 0 && new_x < size && new_y >= 0 && new_y < size) {
+                    if (!visited[new_y][new_x] && grid[new_y][new_x] == 1) {
+                        queue.add(new int[]{new_x, new_y});
+                        visited[new_y][new_x] = true;
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public static double largestComponentRatio(ArrayList<Point2D> points){
+        int[][] grid = toMatrix(points, 256);
+        int totalPoints = 0;
+        int maxComponentSize = 0;
+        int length = grid.length;
+        boolean[][] visited = new boolean[length][length];
+        for(int i = 0; i < length; i++){
+            for(int j = 0; j < length; j++){
+                if(grid[i][j] == 1 ){
+                    totalPoints++;
+                    if(!visited[i][j])
+                        maxComponentSize = Math.max(maxComponentSize, bfs_fill(grid, i, j, visited));
+                }
+            }
+        }
+        return (double) maxComponentSize/totalPoints;
+    }
 }

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
     private JButton pause;
     private JButton dimensionBtn;
     private JButton add;
+    private JButton largestComponent;
 
     public Panel(){
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -38,23 +40,14 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         this.addMouseWheelListener(this);
         this.addMouseMotionListener(this);
 
-        this.SETTINGS = new ChaosGameSettings(3, 0, 0.6, 350, WIDTH, HEIGHT,
-                                                new HashMap[]{});
+        this.SETTINGS = new ChaosGameSettings(3, 0, 0.45, 350, WIDTH, HEIGHT,
+                                                new HashMap[]{
+                                                });
         this.SIM = new ChaosGameSimulator(SETTINGS);
 
         this.timer = new Timer(0, this);
         this.zoomFactor = 1.0;
         this.zoomCenter = new Point2D.Double((double) WIDTH/2, (double) HEIGHT/2);
-
-
-//        //SidePanel
-//        sidePanel = new SidePanel();
-//        sidePanel.setBounds(0, 0, WIDTH/3, HEIGHT);
-//        this.add(sidePanel);
-//
-//        JButton toggle = sidePanel.getToggleButton();
-//        toggle.setBounds(WIDTH/3, 10, 50, 30);
-//        this.add(toggle);
 
         this.setLabels();
         this.setButtons();
@@ -106,6 +99,8 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
             for (int i = 0; i < boxSizes.length; i++) {
                 System.out.printf("%d\t\t%.6f%n", boxSizes[i], lacunarityValues[i]);
             };
+
+            System.out.println(Arrays.deepToString(Helper.toMatrix(SIM.getPoints(), 256)));
         });
 
         add = new JButton();
@@ -120,9 +115,20 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
             }
         });
 
+        largestComponent = new JButton();
+        largestComponent.setBounds(WIDTH - 80, 100, 70, 30);
+        largestComponent.setBackground(new Color(0, 0 ,0 ,0));
+        largestComponent.setText("largestComponent");
+        largestComponent.setFocusable(false);
+        largestComponent.addActionListener(e ->{
+            isPaused = true;
+            System.out.println(Helper.largestComponentRatio(SIM.getPoints()));
+        });
+
         this.add(pause);
         this.add(dimensionBtn);
         this.add(add);
+        this.add(largestComponent);
     }
 
     @Override
@@ -133,10 +139,10 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, WIDTH, HEIGHT);
 
-        g2d.setColor(Color.CYAN);
         ArrayList<Point2D> points = SIM.getPoints();
 
         for (Point2D p : points) {
+            g2d.setColor(Color.CYAN);
             double dx = p.getX() - zoomCenter.getX();
             double dy = p.getY() - zoomCenter.getY();
 
@@ -146,6 +152,12 @@ public class Panel extends JPanel implements ActionListener, MouseWheelListener,
 
             Ellipse2D.Double point = new Ellipse2D.Double(x - radius, y - radius, 2 * radius, 2 * radius);
             g2d.fill(point);
+
+//            for(int i = 0; i < 2; i++){
+//                g2d.setColor(new Color(150, 0, 255, 15 - i).brighter());
+//                g2d.fill(new Arc2D.Double(point.getX() - radius - 2.5*i, point.getY() - radius - 2.5*i,
+//                        radius * 2 + 5*i, radius * 2 + 5*i, 0, 360, Arc2D.PIE));
+//            }
         }
     }
 
