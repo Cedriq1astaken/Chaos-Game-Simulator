@@ -56,53 +56,6 @@ public class Helper {
         return newPoints;
     }
 
-    public static double[][] boxCounting2D(ArrayList<Point2D> points, int limit) {
-        Point2D[] normalPoints = normalize(new double[]{0.0, 1.0 - epsilon}, points);
-
-        double[][] logLog = new double[limit + 1][2];
-
-        double[] fractionalShiftX = {0.0, 0.5, 0.0, 0.5};
-        double[] fractionalShiftY = {0.0, 0.0, 0.5, 0.5};
-        int numShifts = fractionalShiftX.length;
-
-        for (int i = 0; i <= limit; i++) {
-            int boxesPerAxis = (int) Math.pow(2, i);
-            double boxSize = 1.0 / boxesPerAxis;
-
-            double totalBoxCountForEpsilon = 0.0;
-
-            for (int s = 0; s < numShifts; s++) {
-                Set<String> seenBoxes = new HashSet<>();
-
-                double currentOffsetX = fractionalShiftX[s] * boxSize;
-                double currentOffsetY = fractionalShiftY[s] * boxSize;
-
-                for (Point2D point : normalPoints) {
-                    double shiftedX = point.getX() + currentOffsetX;
-                    double shiftedY = point.getY() + currentOffsetY;
-
-                    int boxX = (int) Math.floor(shiftedX / boxSize);
-                    int boxY = (int) Math.floor(shiftedY / boxSize);
-
-                    seenBoxes.add(boxX + "," + boxY);
-                }
-                totalBoxCountForEpsilon += seenBoxes.size();
-            }
-
-            double averageBoxCount = totalBoxCountForEpsilon / numShifts;
-
-            if (averageBoxCount > 0) {
-                logLog[i][0] = Math.log(1.0 / boxSize);
-                logLog[i][1] = Math.log(averageBoxCount);
-            } else {
-                logLog[i][0] = Math.log(1.0 / boxSize);
-                logLog[i][1] = Double.NaN;
-            }
-        }
-
-        return logLog;
-    }
-
     public static double[][] point2dToDouble(Point2D[] data){
         ArrayList<double[]> points = new ArrayList<>();
 
@@ -127,56 +80,11 @@ public class Helper {
         return matrix;
     }
 
-    public static int bfs_fill(int[][] grid, int start_x, int start_y, boolean[][] visited) {
-        int size = grid.length;
-        int count = 1;
-
-        Deque<int[]> queue = new ArrayDeque<>();
-        queue.add(new int[]{start_x, start_y});
-
-        visited[start_y][start_x] = true;
-
-        int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
-        int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-        while(!queue.isEmpty()) {
-
-
-            int[] current = queue.removeFirst();
-
-            int x = current[0];
-            int y = current[1];
-
-            for (int i = 0; i < dx.length; i++) {
-                int new_x = x + dx[i];
-                int new_y = y + dy[i];
-                if (new_x >= 0 && new_x < size && new_y >= 0 && new_y < size) {
-                    if (!visited[new_y][new_x] && grid[new_y][new_x] == 1) {
-                        queue.add(new int[]{new_x, new_y});
-                        visited[new_y][new_x] = true;
-                        count++;
-                    }
-                }
-            }
+    public static HashMap<String, Integer>[] skipsConditionsWriter(String rules){
+        HashMap<String, Integer>[] map = new HashMap[rules.length()/2];
+        for(int i = 0; i < rules.length(); i += 2){
+            map[i/2] = hashMapBuilder(Integer.parseInt(String.valueOf(rules.charAt(i))), Integer.parseInt(String.valueOf(rules.charAt(i + 1))));
         }
-        return count;
-    }
-
-    public static double largestComponentRatio(ArrayList<Point2D> points){
-        int[][] grid = toMatrix(points, 256);
-        int totalPoints = 0;
-        int maxComponentSize = 0;
-        int length = grid.length;
-        boolean[][] visited = new boolean[length][length];
-        for(int i = 0; i < length; i++){
-            for(int j = 0; j < length; j++){
-                if(grid[i][j] == 1 ){
-                    totalPoints++;
-                    if(!visited[i][j])
-                        maxComponentSize = Math.max(maxComponentSize, bfs_fill(grid, i, j, visited));
-                }
-            }
-        }
-        return (double) maxComponentSize/totalPoints;
+        return map;
     }
 }
