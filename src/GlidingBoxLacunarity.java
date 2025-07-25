@@ -235,8 +235,15 @@ public class GlidingBoxLacunarity {
         int totalBoxes = 0;     // B(r) - total number of boxes
     }
 
-    /**
-     * Example usage and test
-     */
+    public double lacunaritySlope(double[] values){
+        double[] log_Vr = new double[values.length];
+        double[] log_r = new double[values.length];
 
+        for(int i = 1; i <= values.length; i++){
+            log_r[i - 1] = Math.log(i);
+            log_Vr[i - 1] = Math.log(values[i - 1]);
+        }
+
+        return Statistics.LinearRegression(log_r, log_Vr)[0];
+    }
 }

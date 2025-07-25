@@ -17,8 +17,6 @@ public class ComponentRatio {
         int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
 
         while(!queue.isEmpty()) {
-
-
             int[] current = queue.removeFirst();
 
             int x = current[0];

@@ -81,10 +81,23 @@ public class Helper {
     }
 
     public static HashMap<String, Integer>[] skipsConditionsWriter(String rules){
-        HashMap<String, Integer>[] map = new HashMap[rules.length()/2];
-        for(int i = 0; i < rules.length(); i += 2){
-            map[i/2] = hashMapBuilder(Integer.parseInt(String.valueOf(rules.charAt(i))), Integer.parseInt(String.valueOf(rules.charAt(i + 1))));
+        ArrayList<HashMap<String, Integer>> map = new ArrayList<>();
+        int i = 0;
+        while(i < rules.length()){
+            int proximity = 0;
+            int occurrence = 0;
+            if(rules.charAt(i) == '-'){
+                proximity = -Integer.parseInt(String.valueOf(rules.charAt(i + 1)));
+                occurrence = Integer.parseInt(String.valueOf(rules.charAt(i + 2)));
+                i += 3;
+            }
+            else {
+                proximity = Integer.parseInt(String.valueOf(rules.charAt(i)));
+                occurrence = Integer.parseInt(String.valueOf(rules.charAt(i + 1)));
+                i += 2;
+            }
+            map.add(hashMapBuilder(proximity, occurrence));
         }
-        return map;
+        return map.toArray(new HashMap[0]);
     }
 }

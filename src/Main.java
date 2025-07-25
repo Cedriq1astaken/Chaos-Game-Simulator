@@ -6,10 +6,10 @@ public class Main{
     private static JPanel setupPanel = new JPanel(new GridLayout(6, 2)); //Sets up a panel to
 
     //Java swing fields
-    private static JTextField rField = new JTextField(); //r value (scaling ratio)
-    private static JTextField vertexField = new JTextField(); //Number of vertices used in the chaos game
-    private static JTextField radiusField = new JTextField(); //Distance of one vertex to the centroid.
-    private static JTextField edgeField = new JTextField(); //Number of edges in between every 2 vertices
+    private static JTextField rField = new JTextField("0.5"); //r value (scaling ratio)
+    private static JTextField vertexField = new JTextField("3"); //Number of vertices used in the chaos game
+    private static JTextField radiusField = new JTextField("400"); //Distance of one vertex to the centroid.
+    private static JTextField edgeField = new JTextField("0"); //Number of edges in between every 2 vertices
     private static JTextField ruleField = new JTextField();
     /*
         ruleField takes string representing the skip condition (even

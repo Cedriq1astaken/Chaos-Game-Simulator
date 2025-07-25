@@ -7,6 +7,7 @@ public class ChaosGameSettings {
     private double distanceRatio;
     private double centroidToVertex;
     private Point2D.Double initialPoint;
+    private double r;
 
     //Conditions;
     private HashMap<String, Integer>[] skipsConditions;
@@ -14,6 +15,7 @@ public class ChaosGameSettings {
     public ChaosGameSettings(int nVertexAnchor, int nEdgeAnchor, double distanceRatio,
                              double centroidToVertex, double width, double height,
                              HashMap<String, Integer>[] skipsConditions) {
+        this.r = distanceRatio;
         this.nVertexAnchor = nVertexAnchor;
         this.nEdgeAnchor = nEdgeAnchor;
         this.distanceRatio = distanceRatio;
@@ -45,5 +47,9 @@ public class ChaosGameSettings {
 
     public HashMap<String, Integer>[] getSkipsConditions() {
         return skipsConditions;
+    }
+
+    public double getR() {
+        return r;
     }
 }
